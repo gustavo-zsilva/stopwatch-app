@@ -7,11 +7,12 @@ export const Container = styled.div`
 
     display: grid;
 
-    grid-template-columns: calc(336px + 2rem) 20rem;
-    grid-template-rows: 14rem 7rem;
+    grid-template-columns: 432px 20rem;
+    grid-template-rows: 14rem 11rem;
     grid-template-areas:
         'Clock LapContainer'
         'Clock Controls';
 
     gap: 2rem;
 `;
+

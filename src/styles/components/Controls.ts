@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Controls = styled.div`
     display: flex;
     flex-direction: column;
     grid-area: Controls;
@@ -32,6 +32,7 @@ export const Container = styled.div`
         button {
             width: 100%;
             border-radius: .5rem;
+            margin-bottom: 1rem;
         }
     }
 
