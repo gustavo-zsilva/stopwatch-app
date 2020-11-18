@@ -3,55 +3,76 @@ import React, { useState, useEffect } from 'react';
 import { Container } from '../styles/components/Layout';
 import { Controls } from '../styles/components/Controls';
 import { Clock, ClockContainer } from '../styles/components/Clock';
+import { LapContainer, LapList, LapIndex } from '../styles/components/LapContainer';
 
-import LapContainer from './LapContainer';
-
-interface TimeProps {
-    hours: number;
-    minutes: number;
-    seconds: number;
-    milisseconds: number;
+interface Lap {
+    key: number;
+    time: string;
 }
 
 function Layout() {
-    const [time, setTime] = useState<TimeProps>({hours: 0, minutes: 0, seconds: 0, milisseconds: 0});
-    
     const [isTimerOn, setIsTimerOn] = useState(false);
-    
-    function updateCounter() {
-
-        if (time.milisseconds >= 100) {
-            const seconds = time.seconds + 1;
-
-            setTime({ ...time, seconds, milisseconds: 0 })
-
-            if (time.seconds >= 60) {
-                const minutes = time.minutes + 1;
-    
-                setTime({ ...time, minutes, seconds: 0 })
-
-                if (time.minutes >= 60) {
-                
-                    setTime({ ...time, hours: + 1, minutes: 0 })
-                }
-            
-            }
-        }
-
-        const milisseconds = time.milisseconds++;
-    
-        setTime({ ...time, milisseconds })
-        
-    }
+    const [timer, setTimer] = useState(0);
+    const [laps, setLaps] = useState<Lap[]>([]);
 
     function resetTimer() {
-        setTime({ hours: 0, minutes: 0, seconds: 0, milisseconds: 0 });
+        setIsTimerOn(false);
+        setTimer(0);
+    }
+
+    function addLap() {
+        const newLap = formatTime();
+        const key = new Date().getTime();
+
+        setLaps([...laps, { key, time: newLap }]);
+    }
+
+    function removeLap(key: number) {
+        console.log('removed lap');
+        const newLaps = laps.filter(lap => lap.key !== key);
+
+        setLaps(newLaps);
+    }
+
+    function formatTime() {
+        // A função slice(-2) retorna os dois últimos dígitos de uma string.
+
+        // const getMilisseconds = `0${Math.floor((timer % 100))}`.slice(-2)
+        const getMilisseconds = `0${(timer % 100)}`.slice(-2);
+        const minutes = Math.floor(timer / 100);
+        const getSeconds = `0${minutes % 60}`.slice(-2);
+        const getMinutes = `0${Math.floor(timer / 6000)}`.slice(-2);
+
+        return `${getMinutes}:${getSeconds}:${getMilisseconds}`;
+    }
+
+    function calcGain(lap: Lap) {
+        const currentLap = laps[laps.indexOf(lap)].time;
+        const currentLapValues = currentLap.split(':').map(time => Number(time));
+
+        const previousLap = laps[laps.indexOf(lap)].time;
+        const previousLapValues = previousLap.split(':').map(time => Number(time));
+
+        const arrayDifference: number[] = [];
+        
+        currentLapValues.forEach((value, index) => {
+            // arrayDifference.push(currentLapValues[index] - previousLapValues[index])
+            // console.log(currentLapValues[index] - previousLapValues[index]);
+            
+            
+        })
+        
+        // console.log(arrayDifference.join(':'))
+        
     }
     
     useEffect(() => {
-        if (!isTimerOn) { return; }
+        if (!isTimerOn) { return }
 
-        const id = setInterval(updateCounter, 10);
+        const id = setInterval(() => {
+            setTimer(timer => timer + 1)
+        }, 10);
+
         return () => clearInterval(id);
     }, [isTimerOn])
 
@@ -59,13 +80,29 @@ function Layout() {
         <Container>
             <Clock>
                 <ClockContainer>
-                    <p>{time.hours}:{time.minutes}:{time.seconds}:{time.milisseconds}</p>
-
+                    <p>{formatTime()}</p>
                 </ClockContainer>
             
             </Clock>
 
-            <LapContainer />
+            <LapContainer>
+                <LapList>
+                    {
+                        laps.map(lap => {
+                            return <li key={lap.key} onDoubleClick={() => removeLap(lap.key)}>
+                                <LapIndex>
+                                    Lap
+                                    <span>
+                                        {laps.indexOf(lap) + 1}
+                                    </span>
+                                </LapIndex>
+                                {lap.time}
+                                {calcGain(lap)}
+                            </li>
+                        })
+                    }
+                </LapList>
+            </LapContainer>
 
             <Controls>
                 <div>
@@ -74,7 +111,7 @@ function Layout() {
                 </div>
                 <div>
                     <button type="button" onClick={resetTimer}>Reset</button>
-                    <button type="button">Lap</button>
+                    <button type="button" onClick={addLap}>Lap</button>
                 </div>
             </Controls>
 

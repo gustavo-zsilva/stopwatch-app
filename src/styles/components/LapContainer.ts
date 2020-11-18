@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const LapContainer = styled.div`
     grid-area: LapContainer;
 
     /* border-bottom: 1px solid black; */
@@ -9,7 +9,6 @@ export const Container = styled.div`
     ::-webkit-scrollbar {
         width: 6px;
     }
-
 
     ::-webkit-scrollbar-track {
         background-color: #CCCCCC;
@@ -32,6 +31,29 @@ export const LapList = styled.ul`
     list-style-type: none;
 
     li {
-        padding: .5rem;
+        padding: .8rem .5rem;
+        margin: .8rem 0;
+
+        display: flex;
+        justify-content: space-between;
+
+        font-size: 1.4rem;
+        border-bottom: 1px solid gray;
+        cursor: pointer;
+
+        animation: fade-top 1s backwards;
+
+        transition: .2s;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.050);
+        }
+    }
+`;
+
+export const LapIndex = styled.div`
+    span {
+        font-size: 1rem;
+        vertical-align: top;
     }
 `;

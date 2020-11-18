@@ -9,7 +9,7 @@ export const Controls = styled.div`
         padding: 1rem;
         justify-content: center;
         border: 1px solid gray;
-        background-color: white;
+        background-color: #F2F2F2;
 
         cursor: pointer;
     }
